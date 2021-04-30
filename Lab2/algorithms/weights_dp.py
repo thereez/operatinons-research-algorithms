@@ -1,5 +1,5 @@
 import numpy as np
-from optimal_result import OptimalResult
+from .optimal_result import OptimalResult
 
 
 class WeightsDP:
@@ -19,7 +19,7 @@ class WeightsDP:
         result.knapsack_cost = knapsack_cost
         w = self.capacity
 
-        for i in range(self.N, 0, -1):
+        for i in range(self.N, -1, -1):
             if knapsack_cost != self.table[i-1, w]:
                 knapsack_cost -= self.item_costs[i-1]
                 w -= self.item_weights[i-1]

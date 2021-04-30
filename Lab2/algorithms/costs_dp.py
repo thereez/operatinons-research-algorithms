@@ -1,5 +1,5 @@
 import numpy as np
-from optimal_result import OptimalResult
+from .optimal_result import OptimalResult
 
 
 class CostsDP:
@@ -14,24 +14,25 @@ class CostsDP:
         self.table = np.zeros((self.N + 1, self.cost_sum + 1), dtype=np.uint32)
         self.table[0, 1:] += (self.capacity + 1)
 
+    def get_indexes(self, result, N, cost):
+        if self.table[N, cost] == 0:
+            return
+        if self.table[N-1, cost] == self.table[N, cost]:
+            self.get_indexes(result, N - 1, cost)
+        else:
+            self.get_indexes(result, N - 1, cost - self.item_costs[N - 1])
+            result.item_indexes[N - 1] = 1
+
     def get_answer(self):
         result = OptimalResult(self.N)
         # Look at last row, find first value that < self.capacity + 1
         for idx, weight in enumerate(self.table[-1][::-1]):
             if weight < self.capacity + 1:
                 result.knapsack_weight = weight
-                result.knapsack_cost = self.cost_sum - idx
+                knapsack_cost = self.cost_sum - idx
                 break
-
-        w = result.knapsack_weight
-        knapsack_cost = result.knapsack_cost
-        for i in range(self.N, 0, -1):
-            cost_diff = knapsack_cost - self.item_costs[i-1]
-            weight_diff = w - self.item_weights[i-1]
-            if self.table[-1][cost_diff] == weight_diff:
-                knapsack_cost = cost_diff
-                w = weight_diff
-                result.item_indexes[i-1] = 1
+        self.get_indexes(result, self.N, knapsack_cost)
+        result.knapsack_cost = np.sum(self.item_costs * result.item_indexes)
         return result
 
     def solve(self):
