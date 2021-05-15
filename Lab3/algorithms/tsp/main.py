@@ -1,7 +1,6 @@
 import argparse
 import numpy as np
 from time import perf_counter
-#from python_tsp.exact import solve_tsp_dynamic_programming
 
 from utils import get_distances
 from tsp import get_init_population, rank_selection, apply_crossover, apply_mutation, get_fitness_results
@@ -56,8 +55,6 @@ def main():
     end_time = perf_counter()
     print('Best result by Genetic Algorithm:', best_result)
     print('Total time:', end_time - start_time)
-    #permutation, distance = solve_tsp_dynamic_programming(distances)
-    #print('Optimal ground truth result:', distance)
 
 
 if __name__ == '__main__':

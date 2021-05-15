@@ -29,7 +29,7 @@ def get_fitness_results(population, distances):
 def rank_selection(population, distances):
     fitness_results = get_fitness_results(population, distances)
     sorted_indexes = np.argsort(fitness_results)
-    probabilities = (50, 30, 15, 5) # should be changed ?
+    probabilities = (50, 25, 20, 5)
     ranked_indexes = np.array_split(sorted_indexes, 4)
     weights = []
     for rank, proba in zip(ranked_indexes, probabilities):
@@ -61,9 +61,12 @@ def partially_mapped_crossover(parent1, parent2, window):
 
 def apply_crossover(population, p, window):
     new_population = []
+    indexes = [i for i in range(len(population))]
     for i in range(len(population) // 2):
-        idx1, idx2 = np.random.choice(len(population), 2, replace=False)
+        idx1, idx2 = np.random.choice(indexes, 2, replace=False)
         chromo1, chromo2 = population[idx1], population[idx2]
+        indexes.remove(idx1)
+        indexes.remove(idx2)
         is_crossover = np.random.binomial(1, p)
         if is_crossover:
             chromo1, chromo2 = partially_mapped_crossover(chromo1, chromo2, window)
