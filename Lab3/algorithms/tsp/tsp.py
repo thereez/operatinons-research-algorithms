@@ -82,6 +82,7 @@ def apply_mutation(population, p, window):
             # inverse
             idx = np.random.choice(len(population[0]))
             left, right = idx, idx + window
+            chromo[left:right] = chromo[left:right][::-1]
             # swap
             idx1, idx2 = np.random.choice(len(population[0]), 2, replace=False)
             chromo[idx1], chromo[idx2] = chromo[idx2], chromo[idx1]
