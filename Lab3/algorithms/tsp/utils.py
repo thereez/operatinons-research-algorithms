@@ -76,8 +76,8 @@ def parse_matrix_file(filename, dimension):
 def get_distances(filename):
     if filename in ('bays29', 'gr17'):
         dimension = int(re.findall('[0-9]+', filename)[0])
-        return parse_matrix_file('data/' + filename + '.tsp', dimension)
+        return parse_matrix_file('data_tsp/' + filename + '.tsp', dimension)
     if filename == 'att48':
-        return parse_att_file('data/' + filename + '.tsp')
+        return parse_att_file('data_tsp/' + filename + '.tsp')
     if filename in ('a280', 'ch150', 'fl417'):
-        return parse_euc_file('data/' + filename + '.tsp')
+        return parse_euc_file('data_tsp/' + filename + '.tsp')

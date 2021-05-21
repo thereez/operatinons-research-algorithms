@@ -1,6 +1,8 @@
 import argparse
-import numpy as np
 from time import perf_counter
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 
 from utils import get_distances
 from tsp import get_init_population, rank_selection, apply_crossover, apply_mutation, get_fitness_results
@@ -27,6 +29,15 @@ def build_argparser():
                         help='Optional. Print best result for every generation. Default: False.')
     return parser
 
+def plot_results(costs, num):
+    plt.figure(figsize = (15,10))
+    plt.title('GA convergence')
+    plt.xlabel('Generation num')
+    plt.ylabel('Best result')
+    plt.plot(np.arange(num), costs)
+    plt.legend()
+    plt.show()
+
 def main():
     args = build_argparser().parse_args()
 
@@ -36,6 +47,7 @@ def main():
 
     start_time = perf_counter()
     population = get_init_population(len(distances), args.population_size)
+    costs = []
 
     for i in range(args.generations_num):
         population = rank_selection(population, distances)
@@ -44,6 +56,7 @@ def main():
         
         fitness = get_fitness_results(population, distances)
         generation_result = sorted(fitness)[0]
+        costs.append(generation_result)
         if generation_result < best_result:
             best_result = generation_result
             answer = population[np.argsort(fitness)[0]]
@@ -55,6 +68,8 @@ def main():
     end_time = perf_counter()
     print('Best result by Genetic Algorithm:', best_result)
     print('Total time:', end_time - start_time)
+    print('Route:', answer)
+    plot_results(costs, args.generations_num)
 
 
 if __name__ == '__main__':
