@@ -3,6 +3,7 @@ import numpy as np
 import argparse
 
 from algorithms.local_search import LocalSearch
+from algorithms.iterated_local_search import IteratedLocalSearch
 
 
 def parse_file(filename):
@@ -16,6 +17,7 @@ def parse_file(filename):
             flows.append([int(x) for x in lines[i].split()])
     return np.array(flows, dtype=np.int32), np.array(distances, dtype=np.int32)
 
+
 def build_argparser():
     parser = argparse.ArgumentParser()
     parser.add_argument('-benchmark', required=True, type=str,
@@ -28,13 +30,15 @@ def build_argparser():
                         help='Optional. Input number of iterations.')
     return parser
 
+
 def main():
     args = build_argparser().parse_args()
     filename = f'data/tai{args.benchmark}a'
     iterations_num = args.iterations_num
     if args.algorithm == 'LocalSearch':
         algo = LocalSearch(*parse_file(filename))
-        
+    if args.algorithm == 'IteratedSearch':
+        algo = IteratedLocalSearch(*parse_file(filename))
     start = perf_counter()
     best_solution, best_fitness = algo.run(iterations_num)
     end = perf_counter()
