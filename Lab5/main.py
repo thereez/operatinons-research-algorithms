@@ -13,6 +13,8 @@ def solve(input_file, params):
     end = perf_counter()
     print(result)
     print('Total time:', end - start)
+    return result, data['name']
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -22,8 +24,12 @@ if __name__ == "__main__":
     parser.add_argument('-alpha', type=float, default=0.9)
     parser.add_argument('-beta', type=float, default=2.1)
     parser.add_argument('-rho', type=float, default=0.7)
-  
+
     args = parser.parse_args()
     params = utils.Params(iterations=args.iterations, ants_num=args.ants_num,
                           alpha=args.alpha, beta=args.beta, rho=args.rho)
-    solve(args.benchmark, params)
+    result, filename = solve(args.benchmark, params)
+    with open("./data/solutions/" + filename + ".sol", "w") as solution_file:
+        for i, route in enumerate(result[0], 1):
+            solution_file.write(f'Route #{i}: {" ".join(str(x) for x in route)}\n')
+        solution_file.write(f'cost: {round(result[1])}\n')
